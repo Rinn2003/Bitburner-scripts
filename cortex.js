@@ -235,6 +235,7 @@ export async function main(ns) {
 		// Backdoor servers
 		for (const server of getAccessibleServers(ns)) {
 			if (!ns.getServer(server).backdoorInstalled &&
+				!ns.getServer(server).purchasedByPlayer &&
 				!ns.isRunning(scripts.backdoor, host, server) &&
 				server !== 'home' && enoughRam(ns, scripts.backdoor, host)) {
 				if (server === 'w0r1d_d43m0n' && backdoorWorldDaemon) {
