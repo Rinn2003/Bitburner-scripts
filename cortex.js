@@ -123,7 +123,7 @@ export async function main(ns) {
 		}
 		// Corp manager
 		const hasCorps = ns.getPlayer().bitNodeN === 3 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 3 && s.lvl === 3);
-		if (hasCorps && !ns.getPlayer().hasCorporation && ns.getPlayer().money >= 150e9 && corp
+		if (hasCorps && !ns.corporation.hasCorporation() && ns.getPlayer().money >= 150e9 && corp
 			&& !ns.scriptRunning(scripts.corp, host) && !promptScriptRunning(ns, host)) {
 			const name = await ns.prompt(`Create a Corporation? (Leave empty if no)`, {'type': 'text'});
 			if (name !== '') {
@@ -132,7 +132,7 @@ export async function main(ns) {
 				printBoth(ns, `Started a corporation: ${name}`);
 			} else corp = false;
 		}
-		if (hasCorps && ns.getPlayer().hasCorporation && corp && !ns.scriptRunning(scripts.corp, host) &&
+		if (hasCorps && ns.corporation.hasCorporation() && corp && !ns.scriptRunning(scripts.corp, host) &&
 			enoughRam(ns, scripts.corp, host) && !promptScriptRunning(ns, host)) {
 			if (await ns.prompt(`Start corp manager?`)) {
 				ns.exec(scripts.corp, host);
