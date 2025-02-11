@@ -17,6 +17,7 @@ import {
 	printBoth,
 	promptScriptRunning,
 	readFromFile,
+	modifyFile,
 	updateOverview,
 	updateReservedRam
 } from '/utils.js';
