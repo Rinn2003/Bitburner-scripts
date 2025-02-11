@@ -10,7 +10,7 @@ import {getCities, promptScriptRunning} from '/utils.js';
 export async function main(ns) {
 	ns.disableLog('ALL');
 	const bb = ns.bladeburner;
-	if (ns.getPlayer().bitNodeN !== 7 && !ns.singularity.getOwnedSourceFiles().some(s => s.n === 7 && s.lvl >= 1)) throw new Error(`This script requires the Bladeburner API`);
+	if (ns.getResetInfo().currentNode !== 7 && !ns.singularity.getOwnedSourceFiles().some(s => s.n === 7 && s.lvl >= 1)) throw new Error(`This script requires the Bladeburner API`);
 	if (!bb.joinBladeburnerDivision()) throw new Error(`Must be able to join Bladeburner division`);
 	// Minimum chance for switching actions
 	const minChance = 1 / 3;

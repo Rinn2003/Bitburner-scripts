@@ -75,7 +75,7 @@ export async function main(ns) {
 		if (stocks && await ns.prompt(`Do you want to sell all shares?`)) ns.exec(scripts.stock, 'home', 1, '--liquidate');
 	}
 	// Sell hashes before buying augmentations
-	if (ns.getPlayer().bitNodeN === 9 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 9)) { // Check if player has hacknet servers
+	if (ns.getResetInfo().currentNode === 9 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 9)) { // Check if player has hacknet servers
 		// Check if player has any hashes
 		if (ns.hacknet.numHashes() > 0 && await ns.prompt(`Do you want to sell all hashes?`)) {
 			// Kill hacknet manager

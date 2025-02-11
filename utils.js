@@ -1090,9 +1090,9 @@ export function defaultPortData(portNumber) {
 export async function initData(ns) {
 	const bitnodeData = readFromFile(ns, 0);
 	for (let i = 1; i <= 20; i++)
-		if (ns.getPlayer().bitNodeN !== bitnodeData.bitNodeN || !ns.fileExists(`/data/${i}.txt`))
+		if (ns.getResetInfo().currentNode !== bitnodeData.bitNodeN || !ns.fileExists(`/data/${i}.txt`))
 			await writeToFile(ns, i, defaultPortData(i));
-	await writeToFile(ns, 0, {bitnodeN: ns.getPlayer().bitNodeN});
+	await writeToFile(ns, 0, {bitnodeN: ns.getResetInfo().currentNode});
 }
 
 /**

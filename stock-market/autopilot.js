@@ -98,7 +98,7 @@ export async function main(ns) {
 		ns.ps().filter(p => p.filename === ns.getScriptName() && !p.args.includes('--l') &&
 			!p.args.includes('--liquidate')).forEach(p => ns.kill(p.pid));
 	}
-	if (!disableShorts && ns.getPlayer().bitNodeN !== 8 && !ns.singularity.getOwnedSourceFiles().some(s => s.n === 8 && s.lvl > 1)) {
+	if (!disableShorts && ns.getResetInfo().currentNode !== 8 && !ns.singularity.getOwnedSourceFiles().some(s => s.n === 8 && s.lvl > 1)) {
 		ns.print(`INFO: Shorting stocks has been disabled (you have not yet unlocked access to shorting)`);
 		disableShorts = true;
 	}
@@ -109,7 +109,7 @@ export async function main(ns) {
 		return;
 	}
 	// Assume Bitnode mults are 1 if user doesn't have this API access yet
-	const bitnodeMults = ns.getPlayer().bitNodeN === 5 || ns.singularity.getOwnedSourceFiles().includes(s => s.n === 5) ?
+	const bitnodeMults = ns.getResetInfo().currentNode === 5 || ns.singularity.getOwnedSourceFiles().includes(s => s.n === 5) ?
 		ns.getBitNodeMultipliers() : {FourSigmaMarketDataCost: 1, FourSigmaMarketDataApiCost: 1};
 	let hudElement = null;
 	if (!disableHud) {

@@ -35,8 +35,8 @@ export async function main(ns) {
 	await initData(ns);
 	// Constants
 	const scripts = getScripts();
-	const haveHacknetServers = ns.getPlayer().bitNodeN === 9 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 9);
-	const bitnode8 = ns.getPlayer().bitNodeN === 8;
+	const haveHacknetServers = ns.getResetInfo().currentNode === 9 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 9);
+	const bitnode8 = ns.getResetInfo().currentNode === 8;
 	const generalPort = getPortNumbers().general;
 	// Variables
 	let host = ns.getHostname();
@@ -101,7 +101,7 @@ export async function main(ns) {
 		}
 		// Gang manager
 		// noinspection JSUnresolvedFunction
-		const hasGangs = ns.getPlayer().bitNodeN === 2 || (ns.singularity.getOwnedSourceFiles().some(s => s.n === 2) && ns.heart.break() <= -54e3);
+		const hasGangs = ns.getResetInfo().currentNode === 2 || (ns.singularity.getOwnedSourceFiles().some(s => s.n === 2) && ns.heart.break() <= -54e3);
 		if (hasGangs && !ns.gang.inGang() && gang && !ns.scriptRunning(scripts.gang, host) &&
 			!promptScriptRunning(ns, host)) {
 			const gangs = getGangs().filter(g => ns.getPlayer().factions.includes(g));
@@ -122,7 +122,7 @@ export async function main(ns) {
 			gang = false;
 		}
 		// Corp manager
-		const hasCorps = ns.getPlayer().bitNodeN === 3 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 3 && s.lvl === 3);
+		const hasCorps = ns.getResetInfo().currentNode === 3 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 3 && s.lvl === 3);
 		if (hasCorps && !ns.corporation.hasCorporation() && ns.getPlayer().money >= 150e9 && corp
 			&& !ns.scriptRunning(scripts.corp, host) && !promptScriptRunning(ns, host)) {
 			const name = await ns.prompt(`Create a Corporation? (Leave empty if no)`, {'type': 'text'});
@@ -141,7 +141,7 @@ export async function main(ns) {
 			corp = false;
 		}
 		// Bladeburner manager
-		const hasBladeburner = ns.getPlayer().bitNodeN === 7 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 7);
+		const hasBladeburner = ns.getResetInfo().currentNode === 7 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 7);
 		const hasCombatStats = ns.getPlayer().skills.strength >= 100 && ns.getPlayer().skills.defense >= 100 &&
 			ns.getPlayer().skills.dexterity >= 100 && ns.getPlayer().skills.agility >= 100;
 		if (hasBladeburner && hasCombatStats && !ns.getPlayer().inBladeburner && bladeburner &&
@@ -195,7 +195,7 @@ export async function main(ns) {
 			hacknet = false;
 		}
 		// Sleeve manager
-		if ((ns.getPlayer().bitNodeN === 10 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 10)) &&
+		if ((ns.getResetInfo().currentNode === 10 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 10)) &&
 			sleeve && !ns.scriptRunning(scripts.sleeve, host) &&
 			enoughRam(ns, scripts.sleeve, host) && !promptScriptRunning(ns, host)) {
 			if (await ns.prompt(`Start sleeve manager?`)) {
@@ -206,7 +206,7 @@ export async function main(ns) {
 			sleeve = false;
 		}
 		// Stanek Manager
-		const hasStanek = ns.getPlayer().bitNodeN === 13 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 13);
+		const hasStanek = ns.getResetInfo().currentNode === 13 || ns.singularity.getOwnedSourceFiles().some(s => s.n === 13);
 		if (hasStanek && ns.singularity.getOwnedAugmentations().findIndex(e => e.includes('Stanek\'s Gift')) === -1 &&
 			ns.getPlayer().money >= 200e3 && stanek && !ns.scriptRunning(scripts.stanek, host) &&
 			!promptScriptRunning(ns, host)) {
