@@ -66,9 +66,9 @@ export async function main(ns) {
 		// Contract solver (disables itself if any solution was incorrect)
 		if (contractorOnline) contractorOnline = contractor(ns);
 		// Purchase TOR
-		if (tor && !ns.getPlayer().tor && ns.singularity.purchaseTor()) printBoth(ns, `Purchased TOR router`);
+		if (tor && !ns.hasTorRouter() && ns.singularity.purchaseTor()) printBoth(ns, `Purchased TOR router`);
 		// Purchase only useful programs
-		if (programs && ns.getPlayer().tor) {
+		if (programs && ns.hasTorRouter()) {
 			for (const program of getCracks()) {
 				if (!ns.fileExists(program.name, 'home') && ns.getPlayer().skills.hacking >= program.level &&
 					ns.singularity.purchaseProgram(program.name))
