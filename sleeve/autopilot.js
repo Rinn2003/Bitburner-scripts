@@ -49,7 +49,7 @@ export async function main(ns) {
 			// Check for augmentation purchases
 			ns.sleeve.getSleevePurchasableAugs(i).forEach(aug => {
 				if (!disableAugmentationBuying && isUseful(ns, criteria, aug.name) &&
-					ns.getPlayer().money >= aug.cost && ns.sleeve.getSleeveStats(i).shock === 0)
+					ns.getPlayer().money >= aug.cost && ns.sleeve.getSleeve(i).shock === 0)
 					ns.sleeve.purchaseSleeveAug(i, aug.name);
 			});
 			// Assign tasks
