@@ -88,9 +88,9 @@ export async function part2(ns, cities, jobs, division) {
 	// Boost production
 	for (let city of cities) {
 		const materials = [
-			{name: 'Hardware', qty: 125},
-			{name: 'AI Cores', qty: 75},
-			{name: 'Real Estate', qty: 27e3}
+			{name: 'Hardware', stored: 125},
+			{name: 'AI Cores', stored: 75},
+			{name: 'Real Estate', stored: 27e3}
 		];
 		await buyMaterialsUpto(ns, division, city, materials);
 	}
@@ -120,10 +120,10 @@ export async function part2(ns, cities, jobs, division) {
 	// Boost production
 	for (let city of cities) {
 		const materials = [
-			{name: 'Hardware', qty: 2800},
-			{name: 'Robots', qty: 96},
-			{name: 'AI Cores', qty: 2520},
-			{name: 'Real Estate', qty: 146400}
+			{name: 'Hardware', stored: 2800},
+			{name: 'Robots', stored: 96},
+			{name: 'AI Cores', stored: 2520},
+			{name: 'Real Estate', stored: 146400}
 		];
 		await buyMaterialsUpto(ns, division, city, materials);
 	}
@@ -136,10 +136,10 @@ export async function part2(ns, cities, jobs, division) {
 	// Boost production
 	for (let city of cities) {
 		const materials = [
-			{name: 'Hardware', qty: 9300},
-			{name: 'Robots', qty: 726},
-			{name: 'AI Cores', qty: 6270},
-			{name: 'Real Estate', qty: 230400}
+			{name: 'Hardware', stored: 9300},
+			{name: 'Robots', stored: 726},
+			{name: 'AI Cores', stored: 6270},
+			{name: 'Real Estate', stored: 230400}
 		];
 		await buyMaterialsUpto(ns, division, city, materials);
 	}
@@ -401,7 +401,7 @@ async function moneyForAmount(ns, amount) {
 function hireMaxEmployees(ns, division, city) {
 	const corp = ns.corporation;
 	ns.print(`Hiring employees for ${division} (${city})`);
-	while (corp.getOffice(division, city).employees.length < corp.getOffice(division, city).size) {
+	while (corp.getOffice(division, city).numEmployees < corp.getOffice(division, city).size) {
 		corp.hireEmployee(division, city);
 	}
 }
@@ -436,17 +436,17 @@ async function upgradeUpto(ns, upgrades) {
 async function buyMaterialsUpto(ns, division, city, materials) {
 	const corp = ns.corporation;
 	for (let material of materials) {
-		const curQty = corp.getMaterial(division, city, material.name).qty;
-		if (curQty < material.qty) {
+		const curStored = corp.getMaterial(division, city, material.name).stored;
+		if (curStored < material.stored) {
 			ns.print(`Buying ${material.name} for ${division} (${city})`);
-			corp.buyMaterial(division, city, material.name, (material.qty - curQty) / 10);
+			corp.buyMaterial(division, city, material.name, (material.stored - curStored) / 10);
 		}
 	}
 	while (true) {
 		let breakOut = true;
 		for (let material of materials) {
-			const curQty = corp.getMaterial(division, city, material.name).qty;
-			if (curQty >= material.qty) corp.buyMaterial(division, city, material.name, 0);
+			const curStored = corp.getMaterial(division, city, material.name).stored;
+			if (curStored >= material.stored) corp.buyMaterial(division, city, material.name, 0);
 			else breakOut = false;
 		}
 		if (breakOut) break;
@@ -523,13 +523,14 @@ async function upgradeOffice(ns, division, city, size, positions) {
  */
 function getPositions(ns, division, city) {
 	const corp = ns.corporation;
-	const positions = {};
-	const employeeNames = corp.getOffice(division, city).employees;
-	for (let employeeName of employeeNames) {
-		const employeePos = corp.getEmployee(division, city, employeeName).pos;
-		positions[employeePos] = (positions[employeePos] || 0) + 1;
-	}
-	return positions;
+	return corp.getOffice(division, city).employeeJobs;
+	// const positions = {};	
+	// const employeeNames = corp.getOffice(division, city).employees;
+	// for (let employeeName of employeeNames) {
+	// 	const employeePos = corp.getEmployee(division, city, employeeName).pos;
+	// 	positions[employeePos] = (positions[employeePos] || 0) + 1;
+	// }
+	// return positions;
 }
 
 /**
@@ -650,7 +651,7 @@ function parseVersion(name) {
  */
 async function expandIndustry(ns, industry, division) {
 	const corp = ns.corporation;
-	if (!corp.getCorporation().divisions.some(d => d.type === industry || d.name === division)) {
+	if (!corp.getCorporation().divisions.includes(division)) {
 		ns.print(`Expanding to ${industry} industry: ${division}`);
 		await moneyFor(ns, corp.getIndustryData, industry);
 		corp.expandIndustry(industry, division);
