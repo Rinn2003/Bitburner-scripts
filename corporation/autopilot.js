@@ -9,8 +9,8 @@ import {formatMoney, getCities} from '/utils.js';
 export async function main(ns) {
 	ns.disableLog('ALL');
 	const unlocked = ns.singularity.getOwnedSourceFiles().some(s => s.n === 3 && s.lvl === 3);
-	if (!unlocked && !ns.corporation.hasUnlockUpgrade('Warehouse API')) throw new Error(`This script requires the Warehouse API`);
-	if (!unlocked && !ns.corporation.hasUnlockUpgrade('Office API')) throw new Error(`This script requires the Office API`);
+	if (!unlocked && !ns.corporation.hasUnlock('Warehouse API')) throw new Error(`This script requires the Warehouse API`);
+	if (!unlocked && !ns.corporation.hasUnlock('Office API')) throw new Error(`This script requires the Office API`);
 	// Set up
 	const cities = getCities();
 	const jobs = getJobs();
@@ -287,11 +287,11 @@ export async function autopilot(ns, cities, jobs, division, mainCity = 'Aevum') 
 				ns.getPlayer().money > 2 * corp.getCorporation().issuedShares * corp.getCorporation().sharePrice)
 				corp.buyBackShares(corp.getCorporation().issuedShares);
 			// Check if we can unlock Shady Accounting
-			if (corp.getCorporation().funds >= corp.getUnlockUpgradeCost('Shady Accounting') &&
-				!corp.hasUnlockUpgrade('Shady Accounting')) corp.unlockUpgrade('Shady Accounting');
+			if (corp.getCorporation().funds >= corp.getUnlockCost('Shady Accounting') &&
+				!corp.hasUnlock('Shady Accounting')) corp.purchaseUnlock('Shady Accounting');
 			// Check if we can unlock Government Partnership
-			if (corp.getCorporation().funds >= corp.getUnlockUpgradeCost('Government Partnership') &&
-				!corp.hasUnlockUpgrade('Government Partnership')) corp.unlockUpgrade('Government Partnership');
+			if (corp.getCorporation().funds >= corp.getUnlockCost('Government Partnership') &&
+				!corp.hasUnlock('Government Partnership')) corp.purchaseUnlock('Government Partnership');
 			// Issue dividends
 			corp.issueDividends(dividendsPercentage(ns));
 		}
@@ -652,7 +652,7 @@ async function expandIndustry(ns, industry, division) {
 	const corp = ns.corporation;
 	if (!corp.getCorporation().divisions.some(d => d.type === industry || d.name === division)) {
 		ns.print(`Expanding to ${industry} industry: ${division}`);
-		await moneyFor(ns, corp.getExpandIndustryCost, industry);
+		await moneyFor(ns, corp.getIndustryData, industry);
 		corp.expandIndustry(industry, division);
 	} else ns.print(`Already expanded to ${industry} industry: ${division}`);
 }
@@ -701,9 +701,9 @@ async function purchaseWarehouse(ns, division, city) {
  */
 async function unlockUpgrade(ns, upgrade) {
 	const corp = ns.corporation;
-	if (!corp.hasUnlockUpgrade(upgrade)) {
-		await moneyFor(ns, corp.getUnlockUpgradeCost, upgrade);
-		corp.unlockUpgrade(upgrade);
+	if (!corp.hasUnlock(upgrade)) {
+		await moneyFor(ns, corp.getUnlockCost, upgrade);
+		corp.purchaseUnlock(upgrade);
 		ns.print(`Purchased ${upgrade}`);
 	} else ns.print(`Already purchased ${upgrade}`);
 }
