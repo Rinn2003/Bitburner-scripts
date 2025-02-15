@@ -132,7 +132,10 @@ export async function main(ns) {
 			if (!minMax) needsImprovedAccuracy = true;
 			return bb.getActionCountRemaining(a.type, a.name) > 0 && minMax && amin >= minChance && include;
 		}).map(a => {
-			const level = bb.getActionCurrentLevel(a.type, a.name);
+			var level = 1;
+			if (a.type == "Contracts" || a.type == "Operations") {
+				level = bb.getActionCurrentLevel(a.type, a.name);
+			}
 			const rewardMultiplier = Math.pow(a.rewardFac, level - 1);
 			const gain = a.rankGain * rewardMultiplier * ns.getBitNodeMultipliers().BladeburnerRank;
 			const time = bb.getActionTime(a.type, a.name);
@@ -183,7 +186,10 @@ async function improveAccuracy(ns) {
 async function doAction(ns, type, name) {
 	const bb = ns.bladeburner;
 	// If already doing the action go back
-	if (bb.getCurrentAction().name === name) {
+	var currentAction = bb.getCurrentAction();
+	if (currentAction === null) {
+		// action is none
+	} else if (currentAction.name === name) {
 		await ns.sleep(100);
 		return;
 	}
