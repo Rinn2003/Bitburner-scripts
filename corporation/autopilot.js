@@ -208,7 +208,7 @@ export async function autopilot(ns, cities, jobs, division, mainCity = 'Aevum') 
 	let version = getLatestVersion(ns, division);
 	// noinspection InfiniteLoopJS
 	while (true) {
-		if (corp.getProduct(division, 'Tobacco v' + version).developmentProgress >= 100) {
+		if (corp.getProduct(division, mainCity, 'Tobacco v' + version).developmentProgress >= 100) {
 			// Start selling the developed version
 			corp.sellProduct(division, mainCity, 'Tobacco v' + version, 'MAX', 'MP*' + (2 ** (version - 1)), true);
 			// Set Market TA II if researched
@@ -670,7 +670,7 @@ async function expandIndustry(ns, industry, division) {
 async function expandCity(ns, division, city) {
 	const corp = ns.corporation;
 	if (!corp.getDivision(division).cities.includes(city)) {
-		await moneyFor(ns, corp.getExpandCityCost);
+		await moneyForAmount(ns, corp.getConstants().officeInitialCost);
 		corp.expandCity(division, city);
 		ns.print(`Expanded to ${city} for ${division}`);
 	} else ns.print(`Already expanded to ${city} for ${division}`);
@@ -687,7 +687,7 @@ async function expandCity(ns, division, city) {
 async function purchaseWarehouse(ns, division, city) {
 	const corp = ns.corporation;
 	if (!corp.hasWarehouse(division, city)) {
-		await moneyFor(ns, corp.getPurchaseWarehouseCost);
+		await moneyForAmount(ns, corp.getConstants().warehouseInitialCost);
 		corp.purchaseWarehouse(division, city);
 		ns.print(`Purchased warehouse in ${division} (${city})`);
 	} else ns.print(`Already purchased warehouse in ${city} for ${division}`);
